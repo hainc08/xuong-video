@@ -1,0 +1,498 @@
+{
+  "id": "story_001",
+  "page": "Chuyện Đời & Nhân Tâm",
+  "title": "Càng tốt bụng, càng dễ bị lợi dụng?",
+  "tts": {
+    "engine": "cit",
+    "voice": "Thiện Minh",
+    "speed": 0.8
+  },
+  "music": {
+    "file": "music.wav",
+    "volume": 0.1
+  },
+  "hook": {
+    "lines": [
+      "Tốt bụng quá…",
+      "có dễ bị lợi dụng?"
+    ],
+    "highlight": "lợi dụng",
+    "top": 290
+  },
+  "cta": {
+    "title": "Theo dõi Chuyện Đời & Nhân Tâm",
+    "text": "để nghe thêm những câu chuyện ý nghĩa"
+  },
+  "thumbnail": {
+    "image": "hook_01.png",
+    "fallback": {
+      "image": "scene_02.png",
+      "zoom": 1.3,
+      "focus": [
+        0.7,
+        0.4
+      ]
+    }
+  },
+  "style": {},
+  "character": "Minh, a Vietnamese man around 30 years old, short neat black hair, clean-shaven, friendly and gentle face, slim build, wearing a plain white long-sleeve dress shirt and dark navy trousers. Same face, same hairstyle, same outfit in every image.",
+  "characterName": "Minh",
+  "imageStyle": "Photorealistic cinematic still, 35mm lens, shallow depth of field, warm gold light against dark navy shadows, realistic human proportions, natural hands, modern Vietnamese office. Vertical 9:16 portrait, 1080x1920. Full-bleed image filling the entire vertical frame edge to edge, no letterboxing, no black bars, no borders. No text, no watermark, no logos, no brand names.",
+  "images": [
+    {
+      "file": "hook_01.png",
+      "prompt": "Tense moment at Minh's desk in a modern office: a colleague's arm in a dark suit sleeve drops a heavy stack of folders onto Minh's already crowded desk right in front of him. Minh, seated behind the desk and facing the camera, looks up with a tired, forced polite smile and slightly raised eyebrows. Minh's face is in the vertical middle of the frame. The top third of the frame shows only softly blurred office ceiling lights. The colleague is visible only as an arm and shoulder at the edge of the frame."
+    },
+    {
+      "file": "scene_01.png",
+      "prompt": "Minh stands alone beside a floor-to-ceiling office window in the late afternoon, golden sunlight streaming through the glass onto his face, thoughtful expression, looking out over the city."
+    },
+    {
+      "file": "scene_02.png",
+      "prompt": "Vertical medium shot with the office ceiling lights visible above and the desk in the foreground below. Minh sits at his desk in a modern open-plan office, a colleague standing beside him hands him a thick folder of documents, Minh accepts it with a polite smile, his own desk already full of paperwork."
+    },
+    {
+      "file": "scene_03.png",
+      "prompt": "Vertical three-quarter side view, tall windows with the night city above him. Minh works alone at night in an empty dark office, typing on a keyboard, his face lit by the glow of a computer monitor in front of him, stacks of documents on the desk, rows of empty chairs behind him, tired but focused, a warm desk lamp as the only gold light."
+    },
+    {
+      "file": "scene_03b.png",
+      "prompt": "Close-up head and shoulders of Minh at night at his desk, his face lit by cool monitor glow and a warm desk lamp, tired eyes slightly downcast, shoulders slumped, the dark empty office softly blurred behind him. His hands are out of frame."
+    },
+    {
+      "file": "scene_04.png",
+      "prompt": "The next morning in a bright office, Minh talks calmly with a colleague who is holding a folder, Minh's posture upright, expression polite yet confident, one hand raised slightly in a gentle declining gesture, soft morning light."
+    },
+    {
+      "file": "scene_04b.png",
+      "prompt": "Close-up head and shoulders of Minh in a bright morning office, speaking calmly while looking slightly off camera at someone out of frame, gentle confident expression with a slight polite smile, soft morning light, office softly blurred behind him. His hands are out of frame."
+    },
+    {
+      "file": "scene_05.png",
+      "prompt": "Minh stands by a window looking at the early morning sunlight, relieved and peaceful expression, a faint smile, shoulders relaxed, warm golden light on his face, soft office background."
+    },
+    {
+      "file": "scene_06.png",
+      "prompt": "Minh walks out of the office building at sunset, warm golden light, confident relaxed stride, jacket-free white shirt, calm peaceful mood, city street softly blurred in the background."
+    },
+    {
+      "file": "cta_01.png",
+      "prompt": "Seen from behind, Minh walks away along a wide quiet city sidewalk toward a glowing golden sunset, relaxed confident posture, long warm shadows on the pavement, buildings softly blurred. Minh is small, in the middle of the frame, full body visible."
+    }
+  ],
+  "scenes": [
+    {
+      "name": "Hook",
+      "voice": "Có bao giờ bạn nhận~ra... càng cố làm hài~lòng mọi~người, bạn càng dễ bị xem là điều hiển~nhiên?",
+      "keywords": [
+        "hiển nhiên"
+      ],
+      "shots": [
+        {
+          "image": "hook_01.png",
+          "zoom": [
+            1.05,
+            1.14
+          ],
+          "focus": [
+            [
+              0.5,
+              0.5
+            ],
+            [
+              0.5,
+              0.45
+            ]
+          ],
+          "fallback": {
+            "image": "scene_02.png",
+            "zoom": [
+              1.26,
+              1.36
+            ],
+            "focus": [
+              [
+                0.7,
+                0.4
+              ],
+              [
+                0.7,
+                0.4
+              ]
+            ]
+          }
+        },
+        {
+          "image": "scene_01.png",
+          "at": "bạn càng dễ",
+          "zoom": [
+            1.1,
+            1.22
+          ],
+          "focus": [
+            [
+              0.47,
+              0.42
+            ],
+            [
+              0.47,
+              0.34
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Nhân vật",
+      "voice": "Minh là người | luôn sẵn~lòng giúp~đỡ đồng~nghiệp. Ai nhờ gì, anh cũng gật~đầu, dù việc của mình vẫn còn chất~đống.",
+      "keywords": [
+        "gật đầu",
+        "chất đống"
+      ],
+      "shots": [
+        {
+          "image": "scene_02.png",
+          "zoom": [
+            1.04,
+            1.12
+          ],
+          "focus": [
+            [
+              0.35,
+              0.3
+            ],
+            [
+              0.5,
+              0.36
+            ]
+          ]
+        },
+        {
+          "image": "scene_02.png",
+          "at": "Ai nhờ gì",
+          "zoom": [
+            1.32,
+            1.4
+          ],
+          "focus": [
+            [
+              0.53,
+              0.35
+            ],
+            [
+              0.53,
+              0.35
+            ]
+          ]
+        },
+        {
+          "image": "scene_02.png",
+          "at": "dù việc",
+          "zoom": [
+            1.3,
+            1.3
+          ],
+          "focus": [
+            [
+              0.52,
+              0.5
+            ],
+            [
+              0.45,
+              0.7
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Xung đột",
+      "voice": "Một tối, khi mọi~người đã về hết, Minh vẫn ngồi lại, hoàn~thành phần việc người khác nhờ. Nhưng chẳng ai hỏi anh có mệt không.",
+      "keywords": [
+        "mệt"
+      ],
+      "shots": [
+        {
+          "image": "scene_03.png",
+          "zoom": [
+            1.2,
+            1.04
+          ],
+          "focus": [
+            [
+              0.56,
+              0.34
+            ],
+            [
+              0.5,
+              0.45
+            ]
+          ]
+        },
+        {
+          "image": "scene_03.png",
+          "at": "Minh vẫn ngồi lại",
+          "zoom": [
+            1.3,
+            1.36
+          ],
+          "focus": [
+            [
+              0.3,
+              0.55
+            ],
+            [
+              0.42,
+              0.6
+            ]
+          ]
+        },
+        {
+          "image": "scene_03b.png",
+          "at": "Nhưng chẳng ai",
+          "zoom": [
+            1.04,
+            1.12
+          ],
+          "focus": [
+            [
+              0.5,
+              0.42
+            ],
+            [
+              0.5,
+              0.38
+            ]
+          ],
+          "fallback": {
+            "image": "scene_03.png",
+            "zoom": [
+              1.34,
+              1.42
+            ],
+            "focus": [
+              [
+                0.58,
+                0.27
+              ],
+              [
+                0.58,
+                0.27
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bước ngoặt",
+      "voice": "Sáng hôm sau, một đồng~nghiệp lại nhờ Minh làm hộ. Lần này, anh bình~tĩnh đáp: | “Xin lỗi, hôm nay | tôi cần hoàn~thành việc của mình trước.”",
+      "keywords": [
+        "bình tĩnh",
+        "của mình"
+      ],
+      "shots": [
+        {
+          "image": "scene_04.png",
+          "zoom": [
+            1.04,
+            1.12
+          ],
+          "focus": [
+            [
+              0.62,
+              0.42
+            ],
+            [
+              0.45,
+              0.36
+            ]
+          ]
+        },
+        {
+          "image": "scene_04b.png",
+          "at": "Lần này",
+          "zoom": [
+            1.03,
+            1.1
+          ],
+          "focus": [
+            [
+              0.5,
+              0.42
+            ],
+            [
+              0.5,
+              0.38
+            ]
+          ],
+          "fallback": {
+            "image": "scene_04.png",
+            "zoom": [
+              1.3,
+              1.38
+            ],
+            "focus": [
+              [
+                0.45,
+                0.33
+              ],
+              [
+                0.45,
+                0.33
+              ]
+            ]
+          }
+        },
+        {
+          "image": "scene_04.png",
+          "at": "tôi cần",
+          "zoom": [
+            1.12,
+            1.2
+          ],
+          "focus": [
+            [
+              0.45,
+              0.4
+            ],
+            [
+              0.45,
+              0.44
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bài học",
+      "voice": "Minh nhận~ra: giúp~đỡ người khác là điều~tốt. Nhưng nếu cứ mãi hy~sinh | thời~gian và giới~hạn của mình, lòng~tốt sẽ trở~thành gánh~nặng.",
+      "keywords": [
+        "điều tốt",
+        "gánh nặng"
+      ],
+      "shots": [
+        {
+          "image": "scene_05.png",
+          "zoom": [
+            1.14,
+            1.2
+          ],
+          "focus": [
+            [
+              0.45,
+              0.5
+            ],
+            [
+              0.45,
+              0.3
+            ]
+          ]
+        },
+        {
+          "image": "scene_03.png",
+          "at": "Nhưng nếu",
+          "zoom": [
+            1.3,
+            1.38
+          ],
+          "focus": [
+            [
+              0.3,
+              0.5
+            ],
+            [
+              0.45,
+              0.56
+            ]
+          ]
+        },
+        {
+          "image": "scene_05.png",
+          "at": "lòng tốt sẽ",
+          "zoom": [
+            1.3,
+            1.36
+          ],
+          "focus": [
+            [
+              0.44,
+              0.28
+            ],
+            [
+              0.44,
+              0.28
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Outro",
+      "voice": "Hãy tử~tế với mọi~người. Nhưng đừng quên tử~tế với chính~mình.",
+      "keywords": [
+        "chính mình"
+      ],
+      "shots": [
+        {
+          "image": "scene_06.png",
+          "zoom": [
+            1.3,
+            1.22
+          ],
+          "focus": [
+            [
+              0.52,
+              0.3
+            ],
+            [
+              0.52,
+              0.32
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "CTA",
+      "type": "cta",
+      "voice": "Theo~dõi Chuyện Đời và Nhân Tâm để nghe thêm những câu~chuyện ý~nghĩa.",
+      "shots": [
+        {
+          "image": "cta_01.png",
+          "zoom": [
+            1.04,
+            1.12
+          ],
+          "focus": [
+            [
+              0.5,
+              0.5
+            ],
+            [
+              0.5,
+              0.45
+            ]
+          ],
+          "fallback": {
+            "image": "scene_06.png",
+            "zoom": [
+              1.02,
+              1.1
+            ],
+            "focus": [
+              [
+                0.5,
+                0.5
+              ],
+              [
+                0.5,
+                0.45
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
