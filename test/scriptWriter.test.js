@@ -100,6 +100,25 @@ test('runClaude rejects with the stderr tail on a non-zero exit', async () => {
   await assert.rejects(runClaude('x', {spawnFn: fakeSpawn({stderr: 'not logged in', code: 1})}), /not logged in/);
 });
 
+test('a broken stdin pipe to Claude is reported, not thrown at the process', async () => {
+  const spawnFn = (cmd, args) => {
+    const child = new EventEmitter();
+    child.stdin = new PassThrough();
+    child.stdout = new PassThrough();
+    child.stderr = new PassThrough();
+    child.kill = () => {};
+    child.stdin.end = () => {
+      setImmediate(() => {
+        child.stdin.emit('error', Object.assign(new Error('write EPIPE'), {code: 'EPIPE'}));
+        child.stderr.end('claude: not found');
+        child.emit('close', 1);
+      });
+    };
+    return child;
+  };
+  await assert.rejects(runClaude('x', {spawnFn}), /not found/);
+});
+
 test('runClaude gives up after the timeout', async () => {
   await assert.rejects(runClaude('x', {spawnFn: fakeSpawn({delay: -1}), timeoutMs: 50}), /Claude viết quá lâu/);
 });

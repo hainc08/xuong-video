@@ -115,6 +115,8 @@ export const runClaude = (prompt, {spawnFn = spawn, timeoutMs = 300000} = {}) =>
       if (code === 0) finish(resolve, stdout);
       else finish(reject, new Error(`Claude Code báo lỗi: ${(stderr || stdout).trim().slice(-400)}`));
     });
+    // If claude exits before reading the prompt, the pipe errors; "close" already reports why.
+    child.stdin.on('error', () => {});
     child.stdin.end(prompt);
   });
 

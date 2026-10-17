@@ -21,6 +21,16 @@ const handle = (fn) => async (req, res) => {
   }
 };
 
+// The voice and render scripts rewrite videos/<id>.json while they run; edits made meanwhile would be lost.
+const assertNotBusy = (skill, id) => {
+  const job = runningJob();
+  if (job && job.skillId === skill.id && job.projectId === id) {
+    const err = new Error('Video này đang được tạo, chờ xong rồi sửa tiếp.');
+    err.status = 409;
+    throw err;
+  }
+};
+
 // The fields whose change makes the stored voice timing stale.
 const scriptShape = (video) =>
   JSON.stringify({
@@ -73,9 +83,11 @@ export const apiRouter = ({writeScript = realWriteScript, rewriteScene = realRew
   r.put('/api/projects/:skillId/:id', handle(async (req, res) => {
     const skill = getSkill(req.params.skillId);
     const {video: stored, app} = readProject(skill, req.params.id);
+    assertNotBusy(skill, req.params.id);
     let video = req.body.video;
     if (!video?.scenes) throw new Error('Kịch bản không hợp lệ');
-    if (scriptShape(video) !== scriptShape(stored)) video = kindOf(skill).resetGenerated(video);
+    const kind = kindOf(skill);
+    video = scriptShape(video) !== scriptShape(stored) ? kind.resetGenerated(video) : kind.keepGenerated(video, stored);
     if (typeof req.body.caption === 'string') app.caption = req.body.caption;
     writeProject(skill, req.params.id, video, app);
     res.json(projectView(skill, req.params.id));
@@ -83,6 +95,7 @@ export const apiRouter = ({writeScript = realWriteScript, rewriteScene = realRew
 
   r.post('/api/projects/:skillId/:id/rewrite-scene', handle(async (req, res) => {
     const skill = getSkill(req.params.skillId);
+    assertNotBusy(skill, req.params.id);
     const {video} = readProject(skill, req.params.id);
     const index = Number(req.body.index);
     if (!video.scenes[index]) throw new Error('Không có cảnh này');
@@ -100,6 +113,7 @@ export const apiRouter = ({writeScript = realWriteScript, rewriteScene = realRew
     const skill = getSkill(req.params.skillId);
     const {id, file} = req.params;
     if (!IMAGE_NAME.test(file)) throw new Error('Tên ảnh không hợp lệ');
+    assertNotBusy(skill, id);
     const {video, app} = readProject(skill, id);
     await saveImage(req.body.dataUrl, resolveInside(join(skill.workspace, 'public', id), file));
     if (skill.kind === 'office') {
@@ -128,7 +142,8 @@ export const apiRouter = ({writeScript = realWriteScript, rewriteScene = realRew
       throw err;
     }
     const {video, app} = readProject(skill, id);
-    const voice = req.body.voice ?? skill.defaultVoice;
+    // No voice in the request (e.g. "Tạo lại" after reopening the page): keep the one the project already uses.
+    const voice = req.body.voice ?? kindOf(skill).savedVoice(video) ?? skill.defaultVoice;
     const before = JSON.stringify([video.tts, video.ttsEngine, video.ttsVoice, video.ttsSpeed, video.ttsRate]);
     let next = kindOf(skill).applyVoice(video, voice);
     const after = JSON.stringify([next.tts, next.ttsEngine, next.ttsVoice, next.ttsSpeed, next.ttsRate]);

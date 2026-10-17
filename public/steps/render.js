@@ -56,7 +56,8 @@ export const render = async (el, {state, go, flush, api, esc, toast}) => {
 
   async function start() {
     try {
-      const {jobId} = await api.render(state.skill.id, state.projectId, state.voice ?? state.skill.defaultVoice);
+      // Without a voice picked in step 5 the server keeps the project's saved voice.
+      const {jobId} = await api.render(state.skill.id, state.projectId, state.voice ?? undefined);
       follow(jobId);
     } catch (e) {
       toast(e.message);
@@ -68,7 +69,8 @@ export const render = async (el, {state, go, flush, api, esc, toast}) => {
   const running = await api.currentJob().catch(() => null);
   if (running && running.projectId === state.projectId) return follow(running.id);
 
-  const voice = state.voice ?? state.skill.defaultVoice;
+  const saved = state.project.video;
+  const voice = state.voice ?? (saved.tts?.voice ? saved.tts : saved.ttsVoice ? {voice: saved.ttsVoice} : state.skill.defaultVoice);
   el.main.innerHTML = `<div class="row" style="align-items:flex-start;gap:24px"><div class="grow">
     <h1>Tạo video</h1><div class="sub">${esc(state.project.video.title ?? state.project.video.scenes[0]?.title ?? state.projectId)} · ước tính ${state.project.estimateSeconds} giây · giọng ${esc(voice.voice)}</div>
     <div class="card"><div class="label">App sẽ chạy lần lượt</div>

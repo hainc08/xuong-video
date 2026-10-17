@@ -105,6 +105,42 @@ test('render while another job runs answers 409 with the busy message', async ()
   await new Promise((r) => subscribe(job.id, (j) => j.status !== 'running' && r()));
 });
 
+test('a caption-only save cannot bring back stale voice timing', async () => {
+  const file = join(office, 'videos', 'meo-a.json');
+  const stale = fixture('office');
+  stale.scenes[1] = {...stale.scenes[1], audio: 'meo-a/01.mp3', audioSec: 8, durationSec: 9.5};
+  writeFileSync(file, JSON.stringify(stale));
+  const edited = structuredClone(stale);
+  edited.scenes[1].voice = 'Lời đọc ngắn hơn.';
+  await call('PUT', '/api/projects/ai-van-phong-video/meo-a', {video: edited}); // resets timing
+  await call('PUT', '/api/projects/ai-van-phong-video/meo-a', {video: edited, caption: 'mới'}); // client still holds old fields
+  const saved = JSON.parse(readFileSync(file, 'utf8'));
+  assert.equal('audio' in saved.scenes[1], false);
+  assert.equal(saved.scenes[1].durationSec, 6);
+});
+
+test('render without a voice keeps the voice saved in the project', async () => {
+  const file = join(office, 'videos', 'meo-a.json');
+  writeFileSync(file, JSON.stringify({...fixture('office'), ttsEngine: 'edge', ttsVoice: 'vi-VN-NamMinhNeural', ttsRate: '+5%'}));
+  const {status, body} = await call('POST', '/api/projects/ai-van-phong-video/meo-a/render', {});
+  assert.equal(status, 200);
+  const saved = JSON.parse(readFileSync(file, 'utf8'));
+  assert.equal(saved.ttsVoice, 'vi-VN-NamMinhNeural');
+  assert.equal(saved.ttsRate, '+5%');
+  await new Promise((r) => subscribe(body.jobId, (j) => j.status !== 'running' && r()));
+});
+
+test('editing a project while its video is being made is refused', async () => {
+  const job = startJob({id: 'ai-van-phong-video', kind: 'office', workspace: office}, 'meo-a', [{label: 'Chậm', cmd: process.execPath, args: ['-e', 'setTimeout(() => {}, 400)']}]);
+  const {body: view} = await call('GET', '/api/projects/ai-van-phong-video/meo-a');
+  const put = await call('PUT', '/api/projects/ai-van-phong-video/meo-a', {video: view.video});
+  assert.equal(put.status, 409);
+  assert.match(put.body.error, /đang được tạo/);
+  const up = await call('POST', '/api/projects/ai-van-phong-video/meo-a/images/scene_09.png?scene=0', {dataUrl: PNG_1PX});
+  assert.equal(up.status, 409);
+  await new Promise((r) => subscribe(job.id, (j) => j.status !== 'running' && r()));
+});
+
 test('GET /api/jobs/current reports no running job when idle', async () => {
   const {status, body} = await call('GET', '/api/jobs/current');
   assert.equal(status, 200);

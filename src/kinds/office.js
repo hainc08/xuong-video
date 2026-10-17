@@ -29,6 +29,22 @@ export const resetGenerated = (video) => {
   return v;
 };
 
+// The server owns voice timing: take it from the stored file, never from what the browser sends back.
+export const keepGenerated = (incoming, stored) => {
+  const v = clone(incoming);
+  v.scenes.forEach((s, i) => {
+    const old = stored.scenes?.[i] ?? {};
+    for (const key of ['audio', 'audioSec', 'words', 'durationSec']) {
+      if (key in old) s[key] = old[key];
+      else delete s[key];
+    }
+  });
+  return v;
+};
+
+export const savedVoice = (video) =>
+  video.ttsVoice ? {engine: video.ttsEngine ?? 'edge', voice: video.ttsVoice, speed: video.ttsSpeed, rate: video.ttsRate} : null;
+
 export const applyVoice = (video, {engine, voice, speed, rate}) => {
   const v = clone(video);
   v.ttsEngine = engine;

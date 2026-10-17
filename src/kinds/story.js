@@ -21,6 +21,16 @@ export const resetGenerated = (video) => {
   return v;
 };
 
+// The server owns the timeline: take it from the stored file, never from what the browser sends back.
+export const keepGenerated = (incoming, stored) => {
+  const v = clone(incoming);
+  if (stored.timeline) v.timeline = stored.timeline;
+  else delete v.timeline;
+  return v;
+};
+
+export const savedVoice = (video) => (video.tts?.voice ? {...video.tts} : null);
+
 export const applyVoice = (video, {engine, voice, speed, rate}) => ({
   ...clone(video),
   tts: engine === 'cit' ? {engine, voice, speed} : {engine, voice, rate},

@@ -75,6 +75,7 @@ export const flush = async () => {
 export const openProject = async (skillId, id, step = 3) => {
   state.skill = state.skills.find((s) => s.id === skillId) ?? null;
   state.projectId = id;
+  state.voice = null; // a voice picked for another project must not carry over
   state.project = await api.getProject(skillId, id);
   await go(step);
 };

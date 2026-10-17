@@ -75,6 +75,15 @@ test('a skill validation failure is explained scene by scene', () => {
   );
 });
 
+test('a step that runs past its time limit is stopped and frees the queue', async () => {
+  const job = startJob(skill, 'p8', [node('setTimeout(() => {}, 60000)', {label: 'Treo', timeoutMs: 300})]);
+  const {job: end} = await finished(job);
+  assert.equal(end.status, 'failed');
+  assert.match(end.error, /Bước "Treo" chạy quá lâu/);
+  const next = startJob(skill, 'p9', [node('1', {label: 'Sau'})]); // would throw 409 if the hung step still held the queue
+  assert.equal((await finished(next)).job.status, 'done');
+});
+
 test('friendlyError maps known provider errors and ignores the rest', () => {
   assert.equal(friendlyError('OpenAI 429: You have no credits remaining.'), 'Tài khoản OpenAI đã hết tiền.');
   assert.equal(friendlyError('Không kết nối được CIT Voice Studio ở http://127.0.0.1:8001'), 'Mở CIT Voice Studio rồi thử lại.');

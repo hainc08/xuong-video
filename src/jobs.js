@@ -10,6 +10,7 @@ const logs = new Map();
 let running = null;
 
 const MAX_LOG = 200;
+const STEP_TIMEOUT_MS = 30 * 60 * 1000; // the longest real step (rendering a 2-minute video) takes a few minutes
 const PROGRESS = /(\d+)\s*\/\s*(\d+)/g;
 
 const notify = (job) => {
@@ -36,14 +37,31 @@ const appendLog = (job, chunk, step) => {
   if (lines.length > MAX_LOG) lines.splice(0, lines.length - MAX_LOG);
 };
 
+// Kill the step and everything it started (Remotion's Chrome, ffmpeg) so a hung step frees the queue.
+const killTree = (child) => {
+  if (process.platform === 'win32') spawn('taskkill', ['/T', '/F', '/PID', String(child.pid)], {windowsHide: true});
+  else child.kill('SIGKILL');
+};
+
 const runCommand = (job, step, cwd) =>
   new Promise((resolve, reject) => {
     const args = typeof step.args === 'function' ? step.args() : step.args;
     const child = spawn(step.cmd, args, {cwd, windowsHide: true, env: {...process.env, PYTHONIOENCODING: 'utf-8'}});
+    const timer = setTimeout(() => {
+      killTree(child);
+      reject(new Error(`Bước "${step.label}" chạy quá lâu nên đã dừng. Kiểm tra mạng hoặc CIT Voice Studio rồi thử lại.`));
+    }, step.timeoutMs ?? STEP_TIMEOUT_MS);
     child.stdout.on('data', (d) => appendLog(job, d, step));
     child.stderr.on('data', (d) => appendLog(job, d, step));
-    child.on('error', reject);
-    child.on('close', (code) => (code === 0 ? resolve() : reject(new Error(`exit ${code}`))));
+    child.on('error', (e) => {
+      clearTimeout(timer);
+      reject(e);
+    });
+    child.on('close', (code) => {
+      clearTimeout(timer);
+      if (code === 0) resolve();
+      else reject(new Error(`exit ${code}`));
+    });
   });
 
 const failureMessage = (job, step, err) => {
