@@ -39,7 +39,7 @@ const summary = (s) => {
 };
 
 export const render = async (el, {state, go, save, api, esc}) => {
-  if (!state.project) return go(state.skill ? 2 : 1);
+  if (!state.project) return go(state.skill ? 3 : 1);
   const video = state.project.video;
   let open = null;
 
@@ -140,6 +140,6 @@ export const render = async (el, {state, go, save, api, esc}) => {
 
   draw();
   el.foot.innerHTML = '<button class="btn ghost" id="back">← Kịch bản</button><button class="btn gold" id="next">Tiếp: giọng đọc →</button>';
-  el.foot.querySelector('#back').addEventListener('click', () => go(3));
-  el.foot.querySelector('#next').addEventListener('click', () => go(5));
+  el.foot.querySelector('#back').addEventListener('click', () => go(4));
+  el.foot.querySelector('#next').addEventListener('click', () => go(6));
 };

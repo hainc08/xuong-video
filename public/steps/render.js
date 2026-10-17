@@ -6,7 +6,7 @@ const ICON = {done: '✓', running: '●', failed: '✗', pending: '○'};
 const exists = async (url) => (await fetch(url, {method: 'HEAD'}).catch(() => null))?.ok ?? false;
 
 export const render = async (el, {state, go, flush, api, esc, toast}) => {
-  if (!state.project) return go(state.skill ? 2 : 1);
+  if (!state.project) return go(state.skill ? 3 : 1);
   await flush().catch(() => {});
   const out = outputsOf(state.skill, state.projectId);
   const url = (rel) => api.fileUrl(state.skill.id, rel, Date.now());
@@ -41,7 +41,7 @@ export const render = async (el, {state, go, flush, api, esc, toast}) => {
     el.foot.innerHTML = job.status === 'running'
       ? '<span class="note">Đang chạy…</span>'
       : `<button class="btn ghost" id="back">← Sửa lại</button><button class="btn gold" id="again">${job.status === 'failed' ? 'Thử lại' : '▶ Tạo lại video'}</button>`;
-    el.foot.querySelector('#back')?.addEventListener('click', () => go(3));
+    el.foot.querySelector('#back')?.addEventListener('click', () => go(4));
     el.foot.querySelector('#again')?.addEventListener('click', start);
   };
 
@@ -78,6 +78,6 @@ export const render = async (el, {state, go, flush, api, esc, toast}) => {
       <div class="note">Thường mất 2–5 phút. Chỉ tạo được một video một lúc.</div></div>
     <div id="status"></div></div><div style="width:330px">${await result()}</div></div>`;
   el.foot.innerHTML = `<button class="btn ghost" id="back">← Giọng đọc</button><button class="btn gold" id="go">▶ Tạo video</button>`;
-  el.foot.querySelector('#back').addEventListener('click', () => go(5));
+  el.foot.querySelector('#back').addEventListener('click', () => go(6));
   el.foot.querySelector('#go').addEventListener('click', start);
 };

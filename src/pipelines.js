@@ -4,6 +4,8 @@ import {dirname, join} from 'node:path';
 import {kindOf} from './kinds/index.js';
 import {readProject} from './projects.js';
 import {resolveInside} from './safePath.js';
+import {archiveProject} from './library.js';
+import {loadConfig} from './config.js';
 
 const CIT_HEALTH = 'http://127.0.0.1:8001/health';
 const IMAGE_NAME = /^[\w-]+\.(png|jpg|jpeg)$/;
@@ -20,6 +22,12 @@ const citCheck = (fetchFn) => async () => {
   }
   throw new Error('Mở CIT Voice Studio rồi thử lại.');
 };
+
+// Last step of every render: copy the finished video and its script to the library folder (drive D).
+const archiveStep = (skill, id) => ({
+  label: 'Lưu vào thư viện',
+  run: async () => archiveProject(skill, id, loadConfig().libraryDir),
+});
 
 const captionStep = (skill, id) => ({
   label: 'Caption',
@@ -66,6 +74,7 @@ const storyPipeline = (skill, id, {imagesOnly, regenerateImage, fetchFn}) => {
     {label: 'Dựng video', cmd: node, args: [remotion(skill), 'render', 'StoryReel', out.video, `--props=videos/${id}.json`], progress: 'remotion'},
     {label: 'Ảnh bìa', cmd: node, args: [remotion(skill), 'still', 'StoryThumb', out.thumbnail, `--props=videos/${id}.json`]},
     captionStep(skill, id),
+    archiveStep(skill, id),
   ];
 };
 
@@ -78,6 +87,7 @@ const officePipeline = (skill, id, {fetchFn}) => {
     {label: 'Kiểm tra kịch bản', cmd: process.execPath, args: [tsx(skill), 'scripts/validate.ts', `videos/${id}.json`]},
     {label: 'Dựng video', cmd: process.execPath, args: [remotion(skill), 'render', 'AiVanPhong', kindOf(skill).outputs(id).video, `--props=videos/${id}.json`], progress: 'remotion'},
     captionStep(skill, id),
+    archiveStep(skill, id),
   ];
 };
 

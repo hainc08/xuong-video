@@ -1,6 +1,4 @@
 // Step 1: pick a skill (one kind of video), or reopen a project.
-import {renderProjects} from './projects.js';
-
 const STEP4 = {images: '🖼 Chọn ảnh từng cảnh (tải lên hoặc AI tạo)', layouts: '🧩 Chọn kiểu bố cục từng cảnh (thẻ số, so sánh, gạch đầu dòng…)'};
 
 const preview = (skill, api, esc) =>
@@ -13,7 +11,7 @@ export const render = async (el, ctx) => {
   el.main.innerHTML = `<h1>Bước 1 · Chọn skill</h1>
     <div class="sub">Mỗi skill là một loại video riêng, có kịch bản, hình và giọng mặc định riêng. Các bước sau tự đổi theo skill bạn chọn.</div>
     <div class="row" id="skills" style="gap:20px"></div>
-    <h2>Dự án đã làm</h2><div id="projects"><span class="spinner"></span></div>`;
+    <div style="margin-top:18px"><button class="btn ghost" id="all">📚 Xem tất cả video đã tạo</button></div>`;
   const box = el.main.querySelector('#skills');
   box.innerHTML = state.skills
     .map(
@@ -39,7 +37,7 @@ export const render = async (el, ctx) => {
     state.skill = skill;
     go(2);
   });
-  el.foot.innerHTML = `<span class="note">Có thể thêm skill mới sau này</span>${state.skill ? '<button class="btn gold" id="next">Tiếp: nhập chủ đề →</button>' : ''}`;
+  el.main.querySelector('#all').addEventListener('click', () => document.getElementById('library').click());
+  el.foot.innerHTML = `<span class="note">Có thể thêm skill mới sau này</span>${state.skill ? '<button class="btn gold" id="next">Tiếp: video đã tạo →</button>' : ''}`;
   el.foot.querySelector('#next')?.addEventListener('click', () => go(2));
-  await renderProjects(el.main.querySelector('#projects'), ctx);
 };

@@ -35,6 +35,7 @@ before(async () => {
     {id: 'ai-van-phong-video', name: 'Mẹo AI văn phòng', kind: 'office', workspace: office, skillDir: office, wordsPerMinute: 165, defaultVoice: {engine: 'edge', voice: 'vi-VN-HoaiMyNeural', rate: '+8%'}, step4: 'layouts', sampleImage: null},
   ]));
   process.env.XUONG_SKILLS = skills;
+  process.env.XUONG_LIBRARY = join(root, 'thu-vien');
   const writeScript = async (skill, {topic}) => ({id: 'story_y', video: {title: topic, scenes: [{name: 'Hook', voice: 'Một hai ba.'}]}, caption: 'cap'});
   server = createApp({writeScript}).listen(0, '127.0.0.1');
   await new Promise((r) => server.once('listening', r));
@@ -152,6 +153,32 @@ test('GET image-prompt is refused for a skill without background images', async 
   const {status, body} = await call('GET', '/api/projects/ai-van-phong-video/meo-a/image-prompt');
   assert.equal(status, 400);
   assert.match(body.error, /chỉ dùng cho video có ảnh nền/);
+});
+
+test('GET /api/library lists the projects of one skill with their status', async () => {
+  const {status, body} = await call('GET', '/api/library?skillId=ke-chuyen-video');
+  assert.equal(status, 200);
+  assert.deepEqual(body.items.map((p) => p.id), ['story_x']);
+  assert.equal(body.items[0].status.code, 'missing-images');
+  assert.equal(body.libraryDir, join(root, 'thu-vien'));
+});
+
+test('GET /api/library searches across skills', async () => {
+  const {body} = await call('GET', '/api/library?q=zzz-khong-co');
+  assert.deepEqual(body.items, []);
+});
+
+test('POST duplicate makes a new project from an old one', async () => {
+  const {status, body} = await call('POST', '/api/projects/ke-chuyen-video/story_x/duplicate');
+  assert.equal(status, 200);
+  assert.notEqual(body.id, 'story_x');
+  assert.equal((await call('GET', `/api/projects/ke-chuyen-video/${body.id}`)).status, 200);
+});
+
+test('POST archive without a video explains why', async () => {
+  const {status, body} = await call('POST', '/api/projects/ke-chuyen-video/story_x/archive');
+  assert.equal(status, 400);
+  assert.match(body.error, /chưa có video/);
 });
 
 test('GET /api/jobs/current reports no running job when idle', async () => {

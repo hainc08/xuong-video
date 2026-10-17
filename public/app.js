@@ -1,8 +1,9 @@
 // Wizard shell: holds the state, draws the step bar and hands #main/#foot to the current step module.
 import * as api from './api.js';
 
-const LABELS = ['Chọn skill', 'Chủ đề', 'Kịch bản', null, 'Giọng đọc', 'Tạo video'];
-const MODULES = {1: 'skill', 2: 'topic', 3: 'script', 5: 'voice', 6: 'render'};
+const LABELS = ['Chọn skill', 'Video đã tạo', 'Chủ đề', 'Kịch bản', null, 'Giọng đọc', 'Tạo video'];
+const MODULES = {1: 'skill', 2: 'library', 3: 'topic', 4: 'script', 6: 'voice', 7: 'render'};
+const ASSETS_STEP = 5; // "Ảnh" or "Bố cục" depending on the skill
 const SAVED = 'xuong-video:last';
 
 export const state = {skills: [], skill: null, projectId: null, project: null, voice: null, jobId: null, step: 1, topic: '', options: {}};
@@ -27,16 +28,16 @@ const remember = () => {
   }
 };
 
-const step4Label = () => (state.skill?.step4 === 'layouts' ? 'Bố cục' : state.skill ? 'Ảnh' : 'Ảnh / Bố cục');
+const assetsLabel = () => (state.skill?.step4 === 'layouts' ? 'Bố cục' : state.skill ? 'Ảnh' : 'Ảnh / Bố cục');
 
 // The furthest step the user may jump to from the bar.
-const reachable = () => (state.projectId ? 6 : state.skill ? 2 : 1);
+const reachable = () => (state.projectId ? 7 : state.skill ? 3 : 1);
 
 const drawSteps = () => {
   el.steps.innerHTML = LABELS.map((label, i) => {
     const n = i + 1;
     const cls = n === state.step ? 'on' : n <= reachable() ? 'done' : '';
-    return `<button class="step ${cls}" data-step="${n}" ${n <= reachable() && n !== state.step ? '' : 'disabled'}><b>${n}</b>${esc(label ?? step4Label())}</button>`;
+    return `<button class="step ${cls}" data-step="${n}" ${n <= reachable() && n !== state.step ? '' : 'disabled'}><b>${n}</b>${esc(label ?? assetsLabel())}</button>`;
   }).join('');
 };
 
@@ -45,6 +46,13 @@ el.steps.addEventListener('click', (e) => {
   if (btn && !btn.disabled) go(Number(btn.dataset.step));
 });
 document.getElementById('home').addEventListener('click', () => go(1));
+// "Thư viện" in the header: every skill's videos at once.
+document.getElementById('library').addEventListener('click', () => {
+  state.skill = null;
+  state.projectId = null;
+  state.project = null;
+  go(2);
+});
 
 let saveTimer;
 let savePending = null;
@@ -72,7 +80,7 @@ export const flush = async () => {
   }
 };
 
-export const openProject = async (skillId, id, step = 3) => {
+export const openProject = async (skillId, id, step = 4) => {
   state.skill = state.skills.find((s) => s.id === skillId) ?? null;
   state.projectId = id;
   state.voice = null; // a voice picked for another project must not carry over
@@ -87,7 +95,7 @@ export const go = async (step) => {
   drawSteps();
   el.main.innerHTML = '';
   el.foot.innerHTML = '';
-  const name = step === 4 ? (state.skill?.step4 === 'layouts' ? 'layouts' : 'images') : MODULES[step];
+  const name = step === ASSETS_STEP ? (state.skill?.step4 === 'layouts' ? 'layouts' : 'images') : MODULES[step];
   const mod = await import(`./steps/${name}.js`);
   await mod.render(el, {state, go, save, flush, api, toast, esc, openProject});
   window.scrollTo(0, 0);
@@ -103,16 +111,22 @@ const boot = async () => {
   }
   // A link like #ke-chuyen-video/story_004/3 opens that project at that step.
   const [linkSkill, linkId, linkStep] = decodeURIComponent(location.hash.slice(1)).split('/');
-  if (linkSkill && linkId) return openProject(linkSkill, linkId, Number(linkStep) || 3);
+  if (linkSkill && linkId) return openProject(linkSkill, linkId, Number(linkStep) || 4);
+  // #thu-vien opens the library of every skill, #<skill-id> that skill's videos.
+  if (linkSkill === 'thu-vien') return go(2);
+  if (linkSkill && state.skills.some((s) => s.id === linkSkill)) {
+    state.skill = state.skills.find((s) => s.id === linkSkill);
+    return go(2);
+  }
   const running = await api.currentJob().catch(() => null);
   if (running) {
     state.jobId = running.id;
-    return openProject(running.skillId, running.projectId, 6);
+    return openProject(running.skillId, running.projectId, 7);
   }
   if (last?.skillId && last?.projectId) {
     try {
       state.jobId = last.jobId ?? null;
-      return await openProject(last.skillId, last.projectId, Math.max(3, last.step ?? 3));
+      return await openProject(last.skillId, last.projectId, Math.min(7, Math.max(4, last.step ?? 4)));
     } catch {
       // the project was deleted: start over
     }

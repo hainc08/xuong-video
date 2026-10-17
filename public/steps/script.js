@@ -4,7 +4,7 @@ const HOOK_MAX = 18;
 const sceneName = (scene, kind) => (kind === 'story' ? scene.name : scene.type);
 
 export const render = async (el, {state, go, save, api, esc, toast}) => {
-  if (!state.project) return go(state.skill ? 2 : 1);
+  if (!state.project) return go(state.skill ? 3 : 1);
   const kind = state.skill.kind;
   const video = state.project.video;
 
@@ -96,7 +96,7 @@ export const render = async (el, {state, go, save, api, esc, toast}) => {
     }
   });
 
-  el.foot.innerHTML = `<button class="btn ghost" id="back">← Đổi chủ đề</button><button class="btn gold" id="next">Tiếp: ${state.skill.step4 === 'layouts' ? 'bố cục' : 'chọn ảnh'} →</button>`;
+  el.foot.innerHTML = `<button class="btn ghost" id="back">← Video đã tạo</button><button class="btn gold" id="next">Tiếp: ${state.skill.step4 === 'layouts' ? 'bố cục' : 'chọn ảnh'} →</button>`;
   el.foot.querySelector('#back').addEventListener('click', () => go(2));
-  el.foot.querySelector('#next').addEventListener('click', () => go(4));
+  el.foot.querySelector('#next').addEventListener('click', () => go(5));
 };

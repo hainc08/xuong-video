@@ -11,6 +11,8 @@ import {listVoices, previewVoice} from './voices.js';
 import {IMAGE_NAME, saveImage} from './uploads.js';
 import {resolveInside} from './safePath.js';
 import {buildBatchImagePrompt} from './imagePrompt.js';
+import {archiveProject, duplicateProject, listLibrary} from './library.js';
+import {loadConfig} from './config.js';
 
 // Wrap an async handler so thrown errors become {error} responses.
 const handle = (fn) => async (req, res) => {
@@ -101,6 +103,22 @@ export const apiRouter = ({writeScript = realWriteScript, rewriteScene = realRew
     const index = Number(req.body.index);
     if (!video.scenes[index]) throw new Error('Không có cảnh này');
     res.json({scene: await rewriteScene(skill, video, index, req.body.instruction ?? '')});
+  }));
+
+  r.get('/api/library', handle(async (req, res) => {
+    const {libraryDir} = loadConfig();
+    const skills = req.query.skillId ? [getSkill(String(req.query.skillId))] : loadSkills();
+    res.json({libraryDir, items: listLibrary(skills, {q: String(req.query.q ?? ''), libraryDir})});
+  }));
+
+  r.post('/api/projects/:skillId/:id/duplicate', handle(async (req, res) => {
+    res.json({id: duplicateProject(getSkill(req.params.skillId), req.params.id)});
+  }));
+
+  r.post('/api/projects/:skillId/:id/archive', handle(async (req, res) => {
+    const skill = getSkill(req.params.skillId);
+    assertNotBusy(skill, req.params.id);
+    res.json({dir: archiveProject(skill, req.params.id, loadConfig().libraryDir)});
   }));
 
   r.get('/api/projects/:skillId/:id/image-prompt', handle(async (req, res) => {

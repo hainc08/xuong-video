@@ -12,7 +12,7 @@ const readFile = (file) =>
   });
 
 export const render = async (el, {state, go, save, flush, api, esc, toast}) => {
-  if (!state.project) return go(state.skill ? 2 : 1);
+  if (!state.project) return go(state.skill ? 3 : 1);
   let busy = false;
   let prompt = null; // {text, count} while the ChatGPT prompt box is open
 
@@ -141,6 +141,6 @@ export const render = async (el, {state, go, save, flush, api, esc, toast}) => {
 
   draw();
   el.foot.innerHTML = '<button class="btn ghost" id="back">← Kịch bản</button><button class="btn gold" id="next">Tiếp: giọng đọc →</button>';
-  el.foot.querySelector('#back').addEventListener('click', () => go(3));
-  el.foot.querySelector('#next').addEventListener('click', () => go(5));
+  el.foot.querySelector('#back').addEventListener('click', () => go(4));
+  el.foot.querySelector('#next').addEventListener('click', () => go(6));
 };

@@ -10,7 +10,7 @@ const savedVoice = (skill, video) => {
 const speak = (text) => (text ?? '').replace(/[~|]/g, ' ').replace(/\s+/g, ' ').trim();
 
 export const render = async (el, {state, go, api, esc, toast}) => {
-  if (!state.project) return go(state.skill ? 2 : 1);
+  if (!state.project) return go(state.skill ? 3 : 1);
   state.voice ??= savedVoice(state.skill, state.project.video);
   if (state.voice.engine === 'cit') state.voice.speed ??= 0.8;
   else state.voice.rate ??= '+8%';
@@ -87,6 +87,6 @@ export const render = async (el, {state, go, api, esc, toast}) => {
 
   draw();
   el.foot.innerHTML = `<button class="btn ghost" id="back">← ${state.skill.step4 === 'layouts' ? 'Bố cục' : 'Ảnh'}</button><button class="btn gold" id="next">Tiếp: tạo video →</button>`;
-  el.foot.querySelector('#back').addEventListener('click', () => go(4));
-  el.foot.querySelector('#next').addEventListener('click', () => go(6));
+  el.foot.querySelector('#back').addEventListener('click', () => go(5));
+  el.foot.querySelector('#next').addEventListener('click', () => go(7));
 };

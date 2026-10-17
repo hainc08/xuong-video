@@ -20,7 +20,7 @@ const storyWorkspace = ({missing = []} = {}) => {
 test('story pipeline skips image generation when every image exists', async () => {
   const {skill} = storyWorkspace();
   const steps = await pipelineFor(skill, 'story_x');
-  assert.deepEqual(steps.map((s) => s.label), ['Giọng đọc + phụ đề', 'Nhạc nền', 'Dựng video', 'Ảnh bìa', 'Caption']);
+  assert.deepEqual(steps.map((s) => s.label), ['Giọng đọc + phụ đề', 'Nhạc nền', 'Dựng video', 'Ảnh bìa', 'Caption', 'Lưu vào thư viện']);
 });
 
 test('story pipeline starts with image generation when an image is missing', async () => {
@@ -86,7 +86,7 @@ test('office pipeline: voice, validate, render, caption', async () => {
   mkdirSync(join(workspace, 'videos'));
   writeFileSync(join(workspace, 'videos', 'meo-a.json'), JSON.stringify(fixture('office')));
   const steps = await pipelineFor({id: 'ai-van-phong-video', kind: 'office', workspace}, 'meo-a');
-  assert.deepEqual(steps.map((s) => s.label), ['Giọng đọc', 'Kiểm tra kịch bản', 'Dựng video', 'Caption']);
+  assert.deepEqual(steps.map((s) => s.label), ['Giọng đọc', 'Kiểm tra kịch bản', 'Dựng video', 'Caption', 'Lưu vào thư viện']);
   assert.deepEqual(steps[0].args, ['scripts/tts.py', 'videos/meo-a.json']);
   assert.match(steps[1].args[0], /tsx[\\/]dist[\\/]cli\.mjs$/);
   assert.deepEqual(steps[2].args.slice(1), ['render', 'AiVanPhong', 'out/meo-a.mp4', '--props=videos/meo-a.json']);

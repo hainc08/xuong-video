@@ -15,11 +15,11 @@ export const render = async (el, {state, go, esc, api, openProject}) => {
       ${story ? `<div><div class="label">Bối cảnh</div><select class="field" id="context">${CONTEXTS.map((c) => `<option>${c}</option>`).join('')}</select></div>` : ''}
     </div>
     <div id="status"></div>`;
-  el.foot.innerHTML = '<button class="btn ghost" id="back">← Đổi skill</button><button class="btn gold" id="write">Viết kịch bản →</button>';
+  el.foot.innerHTML = '<button class="btn ghost" id="back">← Video đã tạo</button><button class="btn gold" id="write">Viết kịch bản →</button>';
   const topic = el.main.querySelector('#topic');
   const status = el.main.querySelector('#status');
   topic.addEventListener('input', () => (state.topic = topic.value));
-  el.foot.querySelector('#back').addEventListener('click', () => go(1));
+  el.foot.querySelector('#back').addEventListener('click', () => go(2));
   el.foot.querySelector('#write').addEventListener('click', async () => {
     const text = topic.value.trim();
     if (!text) {
@@ -35,7 +35,7 @@ export const render = async (el, {state, go, esc, api, openProject}) => {
     try {
       const {id} = await api.createProject(state.skill.id, text, options);
       state.topic = '';
-      await openProject(state.skill.id, id, 3);
+      await openProject(state.skill.id, id, 4);
     } catch (e) {
       status.innerHTML = `<div class="error">${esc(e.message)}</div>`;
       button.disabled = false;

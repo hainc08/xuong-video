@@ -6,7 +6,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .top { display: flex; align-items: center; gap: 18px; padding: 14px 28px; background: var(--navy); color: #fff; }
 .logo { font-weight: 700; font-size: 18px; cursor: pointer; }
 .logo span { color: #e9b95c; }
-.tag { margin-left: auto; font-size: 13px; opacity: .7; }
+.tag { font-size: 13px; opacity: .7; }
 .steps { display: flex; gap: 6px; padding: 14px 28px; background: #fff; border-bottom: 1px solid var(--line); }
 .step { flex: 1; padding: 9px 12px; border-radius: 8px; font-size: 14px; color: #7a8399; background: #f3f5f9; border: 0; text-align: left; }
 .step b { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 50%; background: #d6dbe6; color: #fff; margin-right: 6px; font-size: 12px; }
