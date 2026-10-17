@@ -52,6 +52,8 @@ Bước 6 có nút tải từng file.
 - Đóng tab khi đang tạo video không làm dừng việc tạo; mở lại trang để xem tiến độ.
 - Mỗi lúc chỉ tạo được một video (CIT Voice Studio xử lý từng yêu cầu một).
 - Khi tạo lại một ảnh mà AI lỗi (ví dụ hết hạn mức), ảnh cũ được giữ nguyên.
+- Không dùng khóa API: ở bước Ảnh bấm **📋 Prompt cho ChatGPT** để sao chép một prompt tạo đủ mọi ảnh,
+  dán vào ChatGPT hoặc Gemini (gói bạn đang trả), rồi tải từng ảnh lên thẻ cùng tên.
 - Khi kịch bản vượt giới hạn của skill, app báo đúng cảnh và trường cần sửa.
 
 ## Thêm skill mới

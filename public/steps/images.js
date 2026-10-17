@@ -14,16 +14,18 @@ const readFile = (file) =>
 export const render = async (el, {state, go, save, flush, api, esc, toast}) => {
   if (!state.project) return go(state.skill ? 2 : 1);
   let busy = false;
+  let prompt = null; // {text, count} while the ChatGPT prompt box is open
 
   const draw = (message = '') => {
     const {images} = state.project;
     const missing = images.filter((i) => !i.exists).length;
     el.main.innerHTML = `<div class="row" style="justify-content:space-between;align-items:flex-end">
         <div><h1>Ảnh cho từng cảnh</h1><div class="sub">Tải ảnh của bạn lên, hoặc để AI tạo theo mô tả. Ảnh AI giữ cùng một khuôn mặt nhân vật. Ảnh tải lên được cắt về khung dọc 9:16.</div></div>
-        <div style="text-align:right"><button class="btn" id="all" ${busy || !missing ? 'disabled' : ''}>✨ Tạo tất cả ảnh còn thiếu (${missing})</button>
-        <div class="note" style="margin-top:4px">Gói Cloudflare miễn phí đủ khoảng 10 ảnh mỗi ngày</div></div>
+        <div style="text-align:right"><button class="btn ghost" id="chatgpt">📋 Prompt cho ChatGPT</button> <button class="btn" id="all" ${busy || !missing ? 'disabled' : ''}>✨ Tạo tất cả ảnh còn thiếu (${missing})</button>
+        <div class="note" style="margin-top:4px">Gói Cloudflare miễn phí đủ khoảng 10 ảnh mỗi ngày · hoặc tự tạo bằng ChatGPT/Gemini rồi tải lên</div></div>
       </div>
       <div id="msg">${message}</div>
+      <div id="prompt-box"></div>
       <div class="grid">${images
         .map(
           (img, i) => `<div class="card" style="padding:8px" data-i="${i}">
@@ -37,6 +39,52 @@ export const render = async (el, {state, go, save, flush, api, esc, toast}) => {
         )
         .join('')}</div>`;
     el.main.querySelector('#all').addEventListener('click', () => generate());
+    el.main.querySelector('#chatgpt').addEventListener('click', showPrompt);
+    if (prompt) renderPrompt(); // keep the prompt open while the user uploads image after image
+  };
+
+  const copy = async (textarea) => {
+    try {
+      await navigator.clipboard.writeText(textarea.value);
+    } catch {
+      textarea.select(); // older browsers: copy the selected text
+      document.execCommand('copy');
+    }
+    toast('Đã sao chép prompt');
+  };
+
+  const renderPrompt = () => {
+    const box = el.main.querySelector('#prompt-box');
+    const {text, count} = prompt;
+    box.innerHTML = `<div class="card" style="margin:12px 0">
+        <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:8px">
+          <b>Prompt tạo ${count} ảnh một lần</b>
+          <div><button class="btn small" id="copy-prompt">📋 Sao chép</button> <button class="btn ghost small" id="close-prompt">Đóng</button></div>
+        </div>
+        <ol class="note" style="font-size:13px;line-height:1.7;margin:0 0 8px 18px">
+          <li>Mở cuộc trò chuyện mới trong ChatGPT (hoặc Gemini), dán toàn bộ prompt.</li>
+          <li>Mỗi lượt thường ra một ảnh: gõ <b>tiếp</b> để sang ảnh sau. Ảnh nào lệch mặt, nhắc "giữ đúng khuôn mặt như ảnh 0".</li>
+          <li>Tải từng ảnh về, bấm <b>⬆ Tải</b> ở thẻ có cùng tên bên dưới. Ảnh 0 (character_ref) không cần tải lên.</li>
+        </ol>
+        <textarea class="field" id="prompt-text" rows="10" readonly style="font-size:12px;font-family:Consolas,monospace">${esc(text)}</textarea>
+      </div>`;
+    box.querySelector('#copy-prompt').addEventListener('click', () => copy(box.querySelector('#prompt-text')));
+    box.querySelector('#close-prompt').addEventListener('click', () => {
+      prompt = null;
+      box.innerHTML = '';
+    });
+  };
+
+  // One prompt that makes every image in order: paste it into ChatGPT, then upload each image to the card with the same name.
+  const showPrompt = async () => {
+    await flush().catch(() => {}); // the prompt is built from the saved descriptions
+    try {
+      prompt = await api.imagePrompt(state.skill.id, state.projectId);
+      renderPrompt();
+      copy(el.main.querySelector('#prompt-text'));
+    } catch (e) {
+      el.main.querySelector('#prompt-box').innerHTML = `<div class="error">${esc(e.message)}</div>`;
+    }
   };
 
   const refresh = async (message) => {

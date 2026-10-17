@@ -10,6 +10,7 @@ import {getJob, runningJob, startJob, subscribe} from './jobs.js';
 import {listVoices, previewVoice} from './voices.js';
 import {IMAGE_NAME, saveImage} from './uploads.js';
 import {resolveInside} from './safePath.js';
+import {buildBatchImagePrompt} from './imagePrompt.js';
 
 // Wrap an async handler so thrown errors become {error} responses.
 const handle = (fn) => async (req, res) => {
@@ -100,6 +101,13 @@ export const apiRouter = ({writeScript = realWriteScript, rewriteScene = realRew
     const index = Number(req.body.index);
     if (!video.scenes[index]) throw new Error('Không có cảnh này');
     res.json({scene: await rewriteScene(skill, video, index, req.body.instruction ?? '')});
+  }));
+
+  r.get('/api/projects/:skillId/:id/image-prompt', handle(async (req, res) => {
+    const skill = getSkill(req.params.skillId);
+    if (skill.step4 !== 'images') throw new Error('Prompt tạo ảnh chỉ dùng cho video có ảnh nền.');
+    const {video} = readProject(skill, req.params.id);
+    res.json({text: buildBatchImagePrompt(video), count: (video.images ?? []).length + 1});
   }));
 
   // "generate" is registered before ":file" so it is never taken for a file name.

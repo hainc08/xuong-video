@@ -141,6 +141,19 @@ test('editing a project while its video is being made is refused', async () => {
   await new Promise((r) => subscribe(job.id, (j) => j.status !== 'running' && r()));
 });
 
+test('GET image-prompt returns the ChatGPT batch prompt for a story project', async () => {
+  const {status, body} = await call('GET', '/api/projects/ke-chuyen-video/story_x/image-prompt');
+  assert.equal(status, 200);
+  assert.match(body.text, /ẢNH 0 — character_ref\.png/);
+  assert.equal(body.count, fixture('story').images.length + 1);
+});
+
+test('GET image-prompt is refused for a skill without background images', async () => {
+  const {status, body} = await call('GET', '/api/projects/ai-van-phong-video/meo-a/image-prompt');
+  assert.equal(status, 400);
+  assert.match(body.error, /chỉ dùng cho video có ảnh nền/);
+});
+
 test('GET /api/jobs/current reports no running job when idle', async () => {
   const {status, body} = await call('GET', '/api/jobs/current');
   assert.equal(status, 200);

@@ -18,6 +18,7 @@ export const rewriteScene = (skillId, id, index, instruction) => request('POST',
 export const uploadImage = (skillId, id, file, dataUrl, scene) =>
   request('POST', `${p(skillId, id)}/images/${encodeURIComponent(file)}${scene === undefined ? '' : `?scene=${scene}`}`, {dataUrl});
 export const generateImages = (skillId, id, file) => request('POST', `${p(skillId, id)}/images/generate`, file ? {file} : {});
+export const imagePrompt = (skillId, id) => request('GET', `${p(skillId, id)}/image-prompt`);
 export const voices = () => request('GET', '/api/voices');
 export const previewVoice = (voice, text) => request('POST', '/api/voices/preview', {...voice, text});
 export const render = (skillId, id, voice) => request('POST', `${p(skillId, id)}/render`, {voice});

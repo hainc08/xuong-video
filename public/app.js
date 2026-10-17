@@ -120,4 +120,7 @@ const boot = async () => {
   return go(1);
 };
 
+// Pasting another project link into the same tab only changes the hash; reload so boot() opens it.
+window.addEventListener('hashchange', () => location.reload());
+
 boot().catch((e) => (el.main.innerHTML = `<div class="error">Không mở được app: ${esc(e.message)}</div>`));
