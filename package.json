@@ -1,0 +1,14 @@
+{
+  "name": "xuong-video",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Xưởng Video: web app chạy trên máy để làm video dọc từ các skill",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

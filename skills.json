@@ -1,0 +1,26 @@
+[
+  {
+    "id": "ke-chuyen-video",
+    "name": "Kể chuyện",
+    "description": "Page Chuyện Đời & Nhân Tâm. Chuyện đời thường, bài học kiểu Đắc Nhân Tâm; ảnh nền theo cảm xúc từng cảnh, một nhân vật xuyên suốt; giọng trầm ấm miền Bắc. ~60 giây · 7 cảnh.",
+    "kind": "story",
+    "workspace": "D:\\ke-chuyen-video",
+    "skillDir": "C:\\Users\\admin\\.claude\\skills\\ke-chuyen-video",
+    "wordsPerMinute": 188,
+    "defaultVoice": { "engine": "cit", "voice": "Thiện Minh", "speed": 0.8 },
+    "step4": "images",
+    "sampleImage": "public/story_002/hook_01.png"
+  },
+  {
+    "id": "ai-van-phong-video",
+    "name": "Mẹo AI văn phòng",
+    "description": "Kênh AI Văn Phòng. Mẹo ChatGPT, Claude, Excel, tin công cụ AI; chữ, thẻ số liệu, so sánh, prompt mẫu chuyển động; giọng Edge hoặc CIT. 60–70 giây · ~9 cảnh.",
+    "kind": "office",
+    "workspace": "C:\\Users\\admin\\ai-van-phong-video",
+    "skillDir": "C:\\Users\\admin\\.claude\\skills\\ai-van-phong-video",
+    "wordsPerMinute": 165,
+    "defaultVoice": { "engine": "edge", "voice": "vi-VN-HoaiMyNeural", "rate": "+8%" },
+    "step4": "layouts",
+    "sampleImage": null
+  }
+]
