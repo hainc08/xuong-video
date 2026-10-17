@@ -1,7 +1,7 @@
 # Xưởng Video
 
-Web app chạy trên máy để làm video dọc 9:16 không cần gõ lệnh. Đi qua 6 bước:
-**Chọn skill → Chủ đề → Kịch bản → Ảnh / Bố cục → Giọng đọc → Tạo video**.
+Web app chạy trên máy để làm video dọc 9:16 không cần gõ lệnh. Đi qua 7 bước:
+**Chọn skill → Video đã tạo → Chủ đề → Kịch bản → Ảnh / Bố cục → Giọng đọc → Tạo video**.
 
 App không thay thế các skill mà điều khiển chúng: mỗi dự án chính là file `videos/<id>.json` trong
 thư mục làm việc của skill, nên video làm trên app vẫn mở và sửa tiếp được bằng Claude Code trong chat,
@@ -45,10 +45,21 @@ Video, ảnh bìa và caption được lưu trong thư mục `out/` của skill:
 
 Bước 6 có nút tải từng file.
 
+## Thư viện video
+
+- Sau khi chọn skill là danh sách **Video đã tạo** của skill đó: tiêu đề, chủ đề, ngày tạo và sửa, số cảnh, thời lượng,
+  giọng, số ảnh đã có, dung lượng video, caption và trạng thái (Đã có video / Cần dựng lại / Thiếu ảnh / Chưa dựng).
+  Mỗi video có nút **Mở để sửa**, **Dùng lại (bản sao mới)**, **Xem**, **Tải video**, **Lưu vào ổ D**.
+- Nút **📚 Thư viện** trên đầu trang (hoặc link `#thu-vien`) xem video của mọi skill, có ô tìm kiếm và bộ lọc.
+- Mỗi lần tạo video xong, app tự lưu một bản vào thư mục thư viện (mặc định `D:\xuong-video-thu-vien`, đổi trong
+  `config.json`), theo dạng `<skill>\<ngày tạo>_<mã>\` gồm `video.mp4`, `anh-bia.png`, `caption.txt`,
+  `kich-ban.txt` (kịch bản đọc được ngay), `kich-ban.json`, `thong-tin.json`.
+
 ## Mẹo dùng
 
 - App tự lưu mọi chỉnh sửa. Danh sách "Dự án đã làm" ở bước 1 mở lại dự án cũ.
-- Link dạng `http://127.0.0.1:5170/#ke-chuyen-video/story_004/3` mở thẳng một dự án ở một bước.
+- Link dạng `http://127.0.0.1:5170/#ke-chuyen-video/story_004/4` mở thẳng một dự án ở một bước;
+  `#ke-chuyen-video` mở danh sách video của skill đó.
 - Đóng tab khi đang tạo video không làm dừng việc tạo; mở lại trang để xem tiến độ.
 - Mỗi lúc chỉ tạo được một video (CIT Voice Studio xử lý từng yêu cầu một).
 - Khi tạo lại một ảnh mà AI lỗi (ví dụ hết hạn mức), ảnh cũ được giữ nguyên.
