@@ -1,0 +1,186 @@
+{
+  "accent": "#3B82F6",
+  "brand": "AI Văn Phòng",
+  "tagline": "Mẹo AI mỗi ngày",
+  "handle": "@aivanphongvn",
+  "subtitles": true,
+  "scenes": [
+    {
+      "type": "stats",
+      "kicker": "MẸO AI VĂN PHÒNG",
+      "title": "Claude chạy ngay trong Excel, Word, PowerPoint",
+      "items": [
+        {
+          "label": "Ứng dụng Office",
+          "value": "3"
+        },
+        {
+          "label": "Copy dán qua lại",
+          "value": "0"
+        },
+        {
+          "label": "Hệ điều hành",
+          "value": "Win + Mac"
+        }
+      ],
+      "voice": "Claude giờ chạy ngay trong Excel, Word và PowerPoint. Hết cảnh copy dán qua lại.",
+      "keywords": [
+        "Excel",
+        "Word",
+        "PowerPoint",
+        "copy dán"
+      ],
+      "durationSec": 5
+    },
+    {
+      "type": "compare",
+      "kicker": "TRƯỚC VÀ SAU",
+      "title": "Hết cảnh copy dán sang chatbot",
+      "left": {
+        "label": "Cách cũ",
+        "text": "Copy dữ liệu, dán vào chatbot, rồi dán kết quả ngược lại"
+      },
+      "right": {
+        "label": "Claude trong Office",
+        "text": "Hỏi ở thanh bên, Claude sửa thẳng vào file"
+      },
+      "voice": "Trước đây phải copy dữ liệu sang chatbot. Giờ Claude nằm ngay thanh bên, sửa thẳng vào file.",
+      "keywords": [
+        "chatbot",
+        "thanh bên",
+        "file"
+      ],
+      "durationSec": 6
+    },
+    {
+      "type": "bullets",
+      "kicker": "EXCEL",
+      "title": "Hỏi thẳng bảng tính của bạn",
+      "items": [
+        "Đọc cả sheet lẫn công thức",
+        "Giải thích công thức khó hiểu",
+        "Tìm lỗi #REF!, #N/A",
+        "Sửa ngay trong file"
+      ],
+      "voice": "Trong Excel, Claude đọc cả bảng tính, giải thích công thức khó hiểu, tìm lỗi và sửa giúp bạn.",
+      "keywords": [
+        "Excel",
+        "công thức",
+        "sửa"
+      ],
+      "durationSec": 6
+    },
+    {
+      "type": "code",
+      "kicker": "PROMPT MẪU",
+      "title": "Gõ như đang nhờ đồng nghiệp",
+      "window": "Claude · Excel",
+      "prompt": "›",
+      "lines": [
+        "Vì sao ô F12 báo lỗi #REF!? Sửa giúp tôi và giải thích"
+      ],
+      "output": "Claude chỉ ra ô gây lỗi, sửa công thức và giải thích lý do.",
+      "voice": "Cứ gõ như nhờ đồng nghiệp. Ví dụ: vì sao ô này báo lỗi, sửa giúp tôi.",
+      "keywords": [
+        "đồng nghiệp",
+        "báo lỗi"
+      ],
+      "durationSec": 6
+    },
+    {
+      "type": "steps",
+      "kicker": "WORD",
+      "title": "Sửa văn bản có Track Changes",
+      "items": [
+        "Bôi đen đoạn cần sửa",
+        "Nhờ Claude viết lại",
+        "Duyệt hoặc từ chối từng thay đổi"
+      ],
+      "voice": "Trong Word, bôi đen đoạn cần sửa, nhờ Claude viết lại. Thay đổi hiện dạng Track Changes để bạn duyệt.",
+      "keywords": [
+        "Word",
+        "Track Changes",
+        "duyệt"
+      ],
+      "durationSec": 6.5
+    },
+    {
+      "type": "compare",
+      "kicker": "POWERPOINT",
+      "title": "Slide đúng mẫu công ty",
+      "layout": "column",
+      "badge": "↓",
+      "left": {
+        "label": "Bạn đưa",
+        "text": "Template có sẵn và nội dung cần trình bày",
+        "tone": "amber"
+      },
+      "right": {
+        "label": "Claude trả",
+        "text": "Slide đúng bố cục, biểu đồ vẫn chỉnh sửa được"
+      },
+      "voice": "Trong PowerPoint, bạn đưa template và nội dung. Claude dựng slide đúng mẫu, biểu đồ vẫn sửa được.",
+      "keywords": [
+        "PowerPoint",
+        "template",
+        "biểu đồ"
+      ],
+      "durationSec": 6.5
+    },
+    {
+      "type": "bignumber",
+      "kicker": "LIÊN THÔNG",
+      "value": "1",
+      "unit": "cuộc trò chuyện",
+      "caption": "Xuyên suốt cả 3 ứng dụng",
+      "note": "Claude giữ ngữ cảnh khi bạn chuyển giữa các file",
+      "voice": "Hay nhất là Claude giữ ngữ cảnh giữa các ứng dụng. Số liệu Excel đưa sang slide, không cần giải thích lại.",
+      "keywords": [
+        "ngữ cảnh",
+        "Excel",
+        "slide"
+      ],
+      "durationSec": 6.5
+    },
+    {
+      "type": "steps",
+      "kicker": "CÀI ĐẶT",
+      "title": "Cài trong một phút",
+      "items": [
+        "Mở Excel, Word hoặc PowerPoint",
+        "Vào Add-ins, tìm \"Claude\"",
+        "Đăng nhập tài khoản Claude"
+      ],
+      "voice": "Cách cài: mở ứng dụng Office, vào Add-ins, tìm Claude rồi đăng nhập.",
+      "keywords": [
+        "Add-ins",
+        "Claude",
+        "đăng nhập"
+      ],
+      "durationSec": 5.5
+    },
+    {
+      "type": "statement",
+      "icon": "alert",
+      "text": "Cần tài khoản Claude trả phí. Luôn kiểm tra lại kết quả trước khi gửi đi.",
+      "voice": "Lưu ý: cần tài khoản Claude trả phí, và nhớ kiểm tra kết quả trước khi gửi đi.",
+      "keywords": [
+        "trả phí",
+        "kiểm tra"
+      ],
+      "durationSec": 5.5
+    },
+    {
+      "type": "cta",
+      "title": "Lưu lại & follow",
+      "subtitle": "Mỗi ngày 1 mẹo AI cho dân văn phòng",
+      "actions": true,
+      "voice": "Lưu lại và follow AI Văn Phòng để nhận mẹo AI mỗi ngày nhé.",
+      "keywords": [
+        "Lưu",
+        "follow"
+      ],
+      "durationSec": 4
+    }
+  ]
+}
