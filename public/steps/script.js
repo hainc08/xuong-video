@@ -11,7 +11,7 @@ export const render = async (el, {state, go, save, api, esc, toast}) => {
   const draw = () => {
     el.main.innerHTML = `<div class="row" style="align-items:flex-start;gap:18px">
       <div class="grow">
-        <h1>Kịch bản · ${esc(video.title ?? state.projectId)}</h1>
+        <h1>Kịch bản · ${esc(video.title ?? video.scenes[0]?.title ?? state.projectId)}</h1>
         <div class="sub">Sửa thẳng vào từng cảnh, app tự lưu. Từ khóa được tô màu trên phụ đề và phải có nguyên văn trong lời đọc.${kind === 'story' ? ' Dấu ~ nối từ ghép, dấu | ép xuống dòng phụ đề.' : ''}</div>
         <div id="scenes">${video.scenes
           .map(

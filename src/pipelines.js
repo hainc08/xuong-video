@@ -1,5 +1,5 @@
 // The commands each skill runs to turn a project into a video, as a list of job steps.
-import {existsSync, mkdirSync, rmSync, writeFileSync} from 'node:fs';
+import {existsSync, mkdirSync, renameSync, rmSync, writeFileSync} from 'node:fs';
 import {dirname, join} from 'node:path';
 import {kindOf} from './kinds/index.js';
 import {readProject} from './projects.js';
@@ -39,7 +39,15 @@ const storyPipeline = (skill, id, {imagesOnly, regenerateImage, fetchFn}) => {
     cmd: node,
     args: ['scripts/story_images.mjs', `videos/${id}.json`],
   };
-  if (regenerateImage) images.before = async () => rmSync(resolveInside(imageDir, regenerateImage), {force: true});
+  if (regenerateImage) {
+    // Move the old picture aside (the generator only makes missing files) and put it back if generation fails,
+    // e.g. when the provider is out of quota.
+    const current = resolveInside(imageDir, regenerateImage);
+    const aside = `${current}.old`;
+    images.before = async () => existsSync(current) && renameSync(current, aside);
+    images.onFail = async () => existsSync(aside) && !existsSync(current) && renameSync(aside, current);
+    images.onDone = async () => rmSync(aside, {force: true});
+  }
   if (imagesOnly) return [images];
 
   const missing = (video.images ?? []).some(({file}) => !existsSync(join(imageDir, file)));

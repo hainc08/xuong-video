@@ -54,6 +54,27 @@ test('a failing before() hook fails the job with its message', async () => {
   assert.equal(end.error, 'Mở CIT Voice Studio rồi thử lại.');
 });
 
+test('a failing step runs its onFail hook, a passing step its onDone hook', async () => {
+  const calls = [];
+  const job = startJob(skill, 'p7', [
+    node('1', {label: 'Ok', onDone: async () => calls.push('done')}),
+    node('process.exit(1)', {label: 'Hỏng', onFail: async () => calls.push('fail')}),
+  ]);
+  await finished(job);
+  assert.deepEqual(calls, ['done', 'fail']);
+});
+
+test('a skill validation failure is explained scene by scene', () => {
+  const log = `INVALID:\n${JSON.stringify([
+    {code: 'too_big', maximum: 14, type: 'string', message: 'String must contain at most 14 character(s)', path: ['scenes', 0, 'items', 1, 'value']},
+    {code: 'too_big', maximum: 3, type: 'array', message: 'Array must contain at most 3 element(s)', path: ['scenes', 2, 'lines']},
+  ], null, 2)}`;
+  assert.equal(
+    friendlyError(log),
+    'Kịch bản chưa hợp lệ: Cảnh 1 (items › 2 › value): tối đa 14 ký tự; Cảnh 3 (lines): tối đa 3 mục. Sửa ở bước Bố cục rồi tạo lại.',
+  );
+});
+
 test('friendlyError maps known provider errors and ignores the rest', () => {
   assert.equal(friendlyError('OpenAI 429: You have no credits remaining.'), 'Tài khoản OpenAI đã hết tiền.');
   assert.equal(friendlyError('Không kết nối được CIT Voice Studio ở http://127.0.0.1:8001'), 'Mở CIT Voice Studio rồi thử lại.');

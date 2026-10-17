@@ -13,7 +13,8 @@ const CLAUDE_BIN = process.env.CLAUDE_BIN || 'claude';
 // Files each kind reads from the skill folder: references are optional extras, the sample shows the JSON shape.
 const SKILL_FILES = {
   story: {references: ['references/viet-cau-chuyen.md', 'references/anh-va-cam-xuc.md'], sample: 'template/videos/_sample.json'},
-  office: {references: [], sample: 'template/videos/_sample-long.json'},
+  // schema.ts holds the character and item limits the skill's validator enforces.
+  office: {references: ['template/src/schema.ts'], sample: 'template/videos/_sample-long.json'},
 };
 
 const read = (skill, rel) => readFileSync(join(skill.skillDir, rel), 'utf8');

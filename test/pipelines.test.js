@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdirSync, mkdtempSync, readFileSync, writeFileSync} from 'node:fs';
+import {existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, writeFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {pipelineFor} from '../src/pipelines.js';
@@ -53,6 +53,27 @@ test('imagesOnly with regenerateImage deletes that image and runs only the image
   const steps = await pipelineFor(skill, 'story_x', {imagesOnly: true, regenerateImage: 'scene_03.png'});
   assert.deepEqual(steps.map((s) => s.label), ['Tạo ảnh còn thiếu']);
   assert.equal(typeof steps[0].before, 'function');
+});
+
+test('a failed regeneration puts the old image back', async () => {
+  const {skill} = storyWorkspace();
+  const file = join(skill.workspace, 'public', 'story_x', 'scene_03.png');
+  const [step] = await pipelineFor(skill, 'story_x', {imagesOnly: true, regenerateImage: 'scene_03.png'});
+  await step.before();
+  assert.equal(existsSync(file), false); // moved aside so the generator makes a new one
+  await step.onFail();
+  assert.equal(readFileSync(file, 'utf8'), 'png');
+});
+
+test('a successful regeneration drops the old copy', async () => {
+  const {skill} = storyWorkspace();
+  const dir = join(skill.workspace, 'public', 'story_x');
+  const [step] = await pipelineFor(skill, 'story_x', {imagesOnly: true, regenerateImage: 'scene_03.png'});
+  await step.before();
+  writeFileSync(join(dir, 'scene_03.png'), 'new');
+  await step.onDone();
+  assert.deepEqual(readdirSync(dir).filter((f) => f.startsWith('scene_03.')), ['scene_03.png']);
+  assert.equal(readFileSync(join(dir, 'scene_03.png'), 'utf8'), 'new');
 });
 
 test('regenerateImage refuses names that are not plain image files', async () => {

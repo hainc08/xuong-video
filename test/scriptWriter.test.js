@@ -30,6 +30,17 @@ test('the script prompt carries the skill guide, sample, topic and id', () => {
   assert.doesNotMatch(prompt, /durationSec/); // the sample's generated timeline is stripped
 });
 
+test('the office prompt carries the schema limits so Claude stays inside them', () => {
+  const skillDir = mkdtempSync(join(tmpdir(), 'xv-office-'));
+  writeFileSync(join(skillDir, 'SKILL.md'), '# Mẹo AI');
+  mkdirSync(join(skillDir, 'template', 'videos'), {recursive: true});
+  mkdirSync(join(skillDir, 'template', 'src'), {recursive: true});
+  writeFileSync(join(skillDir, 'template', 'videos', '_sample-long.json'), JSON.stringify({scenes: [{type: 'hook', voice: 'x'}]}));
+  writeFileSync(join(skillDir, 'template', 'src', 'schema.ts'), 'value: z.string().max(14)');
+  const prompt = buildScriptPrompt({id: 'ai-van-phong-video', kind: 'office', skillDir, workspace: skillDir}, {id: 'meo-a', topic: 'email'});
+  assert.match(prompt, /z\.string\(\)\.max\(14\)/);
+});
+
 test('the rewrite prompt names the scene to rewrite and asks for {"scene"}', () => {
   const prompt = buildRewritePrompt(fixtureSkill(), {scenes: [{voice: 'a'}, {voice: 'b'}]}, 1, 'ngắn hơn');
   assert.match(prompt, /cảnh số 2/);

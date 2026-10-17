@@ -64,7 +64,9 @@ const execute = async (job, skill, steps) => {
       else await runCommand(job, step, skill.workspace);
       job.steps[i].status = 'done';
       if (step.progress) job.steps[i].percent = 100;
+      await step.onDone?.();
     } catch (err) {
+      await Promise.resolve(step.onFail?.()).catch(() => {});
       job.steps[i].status = 'failed';
       job.status = 'failed';
       job.error = failureMessage(job, step, err);

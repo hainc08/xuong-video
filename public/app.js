@@ -100,6 +100,9 @@ const boot = async () => {
   } catch {
     last = null;
   }
+  // A link like #ke-chuyen-video/story_004/3 opens that project at that step.
+  const [linkSkill, linkId, linkStep] = decodeURIComponent(location.hash.slice(1)).split('/');
+  if (linkSkill && linkId) return openProject(linkSkill, linkId, Number(linkStep) || 3);
   const running = await api.currentJob().catch(() => null);
   if (running) {
     state.jobId = running.id;
